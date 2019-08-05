@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <title>Exercicio 3</title>
+    </head>
+    <body>
+        <div id="app">
+           
+        </div>
+        <script>
+           let lista = document.createElement('ul');
+
+           var nomes = ["Diego", "Gabriel", "Lucas"];
+           nomes.map(nome => {
+            let item = document.createElement('li');
+            let texto = document.createTextNode(nome)
+
+            item.appendChild(texto);
+            lista.appendChild(item);
+
+           });
+           document.querySelector('#app').appendChild(lista);
+        </script>
+    </body>
+</html>

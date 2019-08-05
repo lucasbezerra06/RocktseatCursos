@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <title>Exercicio 4</title>
+    </head>
+    <body>
+        <div id="app">
+            <input type="text" name="nome" />
+            <button onClick="adicionar()">Adicionar</button>
+        </div>
+        <script>
+           let lista = document.createElement('ul');
+           document.querySelector('#app').appendChild(lista);
+           var nomes = ["Diego", "Gabriel", "Lucas"];
+           nomes.map(nome => {
+            inserirElemento(nome)
+           });
+           function adicionar(){
+                let inputElement = document.querySelector('input[name=nome]');
+                inserirElemento(inputElement.value)
+           }
+
+           function inserirElemento(elemento){
+            let item = document.createElement('li');
+            let texto = document.createTextNode(elemento)
+
+            item.appendChild(texto);
+            lista.appendChild(item);
+           }
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <title>Exercicio 2</title>
+    </head>
+    <body>
+        <div id="app">
+            <button class="botao" onclick="criarElemento()">Criar Quadrado</button>
+        </div>
+        <script>
+            function getRandomColor() {
+                var letters = "0123456789ABCDEF";
+                var color = "#";
+                for (var i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+
+            
+            function criarElemento(){
+                let newElement = document.createElement('div');
+                newElement.style.width = "100px";
+                newElement.style.height = "100px";
+                newElement.style.backgroundColor = "red";
+                newElement.onmouseover = () => {
+                    newElement.style.backgroundColor = getRandomColor();
+                }
+                document.querySelector('#app').appendChild(newElement);
+            }
+        </script>
+    </body>
+</html>
