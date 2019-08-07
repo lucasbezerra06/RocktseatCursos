@@ -1,47 +1,90 @@
-import axios from 'axios';
+import api from './api';
 
-// Funão delay aciona o .then após 1s
-const delay = () => new Promise(resolve => setTimeout(resolve, 1000));
+class App{
+    constructor(){
+        this.repositories = [];
 
-async function umPorSegundo() {
-    await delay();
-    console.log('1s');
-    await delay();
-    console.log('2s');
-    await delay();
-    console.log('3s');
+        this.formEl = document.getElementById('repo-form');
 
-}
-//umPorSegundo();
-async function getUserFromGithub(user) {
-    try {
-        const response = await axios.get(`https://api.github.com/users/${user}`);
-        console.log(response.data);
-    } catch (err) {
-        console.log('Usuário não existe');
+        this.inputEl = document.querySelector('input[name=repository]');
+
+        this.listEl = document.getElementById('repo-list');
+
+        this.registerHandlers();
     }
-}
-//getUserFromGithub('diego3g');
-//getUserFromGithub('diego3g124123');
 
-class Github {
-    static async getRepositories(repo) {
-        try {
-            const response = await axios.get(`https://api.github.com/repos/${repo}`);
-            console.log(response.data);
-        } catch (err) {
-            console.log('Repositório não existe');
+    registerHandlers(){
+        this.formEl.onsubmit = event => this.addRepository(event);
+    }
+
+    setLoading(loading = true){
+        if(loading === true){
+            let loadingEl = document.createElement('span');
+            loadingEl.appendChild(document.createTextNode('Carregando'));
+            loadingEl.setAttribute('id', loading);
+
+            this.formEl.appendChild(loadingEl);
+        }else{
+            document.getElementById('loading').remove();
         }
     }
-}
-//Github.getRepositories('rocketseat/rocketseat.com.br');
-//Github.getRepositories('rocketseat/dslkvmskv');
-const buscaUsuario = async usuario => {
-    try{
-        const response = await axios.get(`https://api.github.com/users/${usuario}`);
-        console.log(response.data);
-    }catch(err){
-        console.log('Usuário não existe');
+
+    async addRepository(event){
+        event.preventDefault();
+
+        const repoInput = this.inputEl.value;
+        if(repoInput.length === 0)
+            return;
+        this.setLoading();
+        try{
+            const resoponse = await api.get(`/repos/${repoInput}`);
+
+            const {name, description, html_url, owner: {avatar_url}} = resoponse.data;
+
+            this.repositories.push({
+                name,
+                description,
+                avatar_url,
+                html_url,
+            });
+            
+            this.inputEl.value = '';
+
+            this.render();
+        }catch(err){
+            alert('O repositório não existe!');
+        }
+        this.setLoading(false);
+    }
+
+    render(){
+        this.listEl.innerHTML = '';
+
+        this.repositories.forEach(repo => {
+            let imgEl = document.createElement('img');
+            imgEl.setAttribute('src', repo.avatar_url);
+
+            let titleEl = document.createElement('strong');
+            titleEl.appendChild(document.createTextNode(repo.name));
+
+            let descriptionEl = document.createElement('p');
+            descriptionEl.appendChild(document.createTextNode(repo.description));
+
+            let linkEl = document.createElement('a');
+            linkEl.setAttribute('target','_blank');
+            linkEl.setAttribute('href', repo.html_url);
+            linkEl.appendChild(document.createTextNode('Acessar'));
+
+            let listItemEl = document.createElement('li');
+            listItemEl.appendChild(imgEl);
+            listItemEl.appendChild(titleEl);
+            listItemEl.appendChild(descriptionEl);
+            listItemEl.appendChild(linkEl);
+
+            this.listEl.appendChild(listItemEl);
+
+        });
     }
 }
-buscaUsuario('diego3g');
+
+new App();
