@@ -46,7 +46,7 @@ class App{
                 description,
                 avatar_url,
                 html_url,
-            });
+            }); 
             
             this.inputEl.value = '';
 
